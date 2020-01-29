@@ -1,4 +1,4 @@
-# InfoGraph ArcGIS JavaScript API 4.14 task
+# InfoGraph - ArcGIS JavaScript API 4.14
 > _Yaser Muhammed Jaser Saleh_
 
 
