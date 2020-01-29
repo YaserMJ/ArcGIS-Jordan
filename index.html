@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+  <!--
+    ===========================================================================================================
+    =                                  Yaser Saleh - Web & Mobile Developer                                   =
+    =                                                                                                         =
+    = GitHub : YaserMJ                                                                                        =
+    = LinkedIn : https://www.linkedin.com/in/yaser-saleh-1152b6192/                                           =
+    = Mobile : 00962790809202                                                                                 =
+    =                                                                                                         =
+    ===========================================================================================================
+   -->
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <meta
+      name="description"
+      content="ArcGIS JS InfoGraph Parks finder Jordan"
+    />
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+    <title>ArcGIS - Yaser Saleh</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+    <!----------------------------------- Calcite Maps Bootstrap ------------------------------------------->
+    <link
+      rel="stylesheet"
+      href="https://esri.github.io/calcite-maps/dist/css/calcite-maps-bootstrap.min-v0.10.css"
+    />
+
+    <!------------------------------------- Calcite Maps ---------------------------------------------------->
+    <link
+      rel="stylesheet"
+      href="https://esri.github.io/calcite-maps/dist/css/calcite-maps-arcgis-4.x.min-v0.10.css"
+    />
+
+    <!------------------------------------ ArcGIS JS 4 API--------------------------------------------------->
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.10/esri/css/main.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body class="calcite-maps calcite-nav-top">
+    <!---------------------------------------- Navbar -------------------------------------------------------->
+
+    <nav
+      class="navbar calcite-navbar navbar-fixed-top calcite-text-light calcite-bg-dark"
+    >
+      <!--------------------------------------- Menu --------------------------------------------------------->
+      <div
+        class="dropdown calcite-dropdown calcite-text-dark calcite-bg-light"
+        role="presentation"
+      >
+        <a
+          class="dropdown-toggle"
+          role="menubutton"
+          aria-haspopup="true"
+          aria-expanded="false"
+          tabindex="0"
+        >
+          <div class="calcite-dropdown-toggle">
+            <span class="sr-only">Toggle dropdown menu</span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </a>
+        <ul class="dropdown-menu calcite-menu-drawer" role="menu">
+          <!-- Places search widget -->
+          <li>
+            <a
+              role="menuitem"
+              tabindex="0"
+              data-target="#panelInfo"
+              aria-haspopup="true"
+              ><span class="glyphicon glyphicon-info-sign"></span> البحث عن
+              معالم</a
+            >
+          </li>
+          <!-- Parks table widget -->
+          <li>
+            <a
+              role="menuitem"
+              tabindex="0"
+              href="#"
+              data-target="#panelTable"
+              aria-haspopup="true"
+              ><span class="glyphicon glyphicon-list"></span> جدول المعالم</a
+            >
+          </li>
+          <!-- PieChart widget -->
+          <li>
+            <a
+              role="menuitem"
+              tabindex="0"
+              href="#"
+              data-target="#panelChart"
+              aria-haspopup="true"
+              ><span class="glyphicon glyphicon-list"></span> تمثيل بياني</a
+            >
+          </li>
+          <!-- Legend widget -->
+          <li>
+            <a
+              role="menuitem"
+              tabindex="0"
+              href="#"
+              data-target="#panelLegend"
+              aria-haspopup="true"
+              ><span class="glyphicon glyphicon-list-alt"></span> (legend)
+              المعلومات</a
+            >
+          </li>
+          <li>
+            <!-- Full map widget -->
+            <a
+              role="menuitem"
+              tabindex="0"
+              href="#"
+              id="calciteToggleNavbar"
+              aria-haspopup="true"
+              ><span class="glyphicon glyphicon-fullscreen"></span> خريطة
+              كاملة</a
+            >
+          </li>
+        </ul>
+      </div>
+      <!--------------------------------------- Title ----------------------------------------------=--------->
+
+      <div class="calcite-title calcite-overflow-hidden">
+        <span class="calcite-title-main">InfoGraph ArcGIS App</span>
+        <span class="calcite-title-divider hidden-xs"></span>
+        <span class="calcite-title-sub hidden-xs"
+          >Finding parks and places made easy. - Yaser Saleh</span
+        >
+      </div>
+      <!--------------------------------------- Nav --------------------------------------------------------->
+      <ul class="nav navbar-nav calcite-nav">
+        <li>
+          <div class="calcite-navbar-search calcite-search-expander">
+            <div id="searchWidgetDiv"></div>
+          </div>
+        </li>
+      </ul>
+    </nav>
+
+    <!--------------------------------------- Map --------------------------------------------------------->
+
+    <div class="calcite-map calcite-map-absolute calcite-widgets-dark">
+      <div id="mapViewDiv"></div>
+    </div>
+
+    <!--------------------------------------- Panels --------------------------------------------------------->
+
+    <div
+      class="calcite-panels calcite-panels-right calcite-text-light calcite-bg-dark panel-group"
+    >
+      <!---------------------------------- Panel - Basemaps ---------------------------------------------------->
+
+      <div id="panelInfo" class="panel collapse in">
+        <div id="headingInfo" class="panel-heading" role="tab">
+          <div class="panel-title">
+            <a
+              class="panel-toggle"
+              role="button"
+              data-toggle="collapse"
+              href="#collapseInfo"
+              aria-expanded="true"
+              aria-controls="collapseInfo"
+              ><span
+                class="glyphicon glyphicon-info-sign"
+                aria-hidden="true"
+              ></span
+              ><span class="panel-label">البحث</span></a
+            >
+            <a
+              class="panel-close"
+              role="button"
+              data-toggle="collapse"
+              tabindex="0"
+              href="#panelInfo"
+              ><span class="esri-icon esri-icon-close" aria-hidden="true"></span
+            ></a>
+          </div>
+        </div>
+        <div
+          id="collapseInfo"
+          class="panel-collapse collapse in"
+          role="tabpanel"
+          aria-labelledby="headingInfo"
+        >
+          <div class="panel-body">
+            <form>
+              <h2>البحث عن المعالم</h2>
+              <div class="form-group">
+                <label for="gov">اختر المحافظة</label>
+                <select class="form-control" id="gov">
+                  <option selected disabled
+                    >اختر المحافظة التي تريدها...</option
+                  >
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="district">اختر اللواء</label>
+                <select class="form-control" id="district">
+                  <option selected disabled>اختر اللواء الذي تريده...</option>
+                </select>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!---------------------------------- Panel - Legend ---------------------------------------------------->
+
+      <div id="panelLegend" class="panel collapse">
+        <div id="headingLegend" class="panel-heading" role="tab">
+          <div class="panel-title">
+            <a
+              class="panel-toggle"
+              role="button"
+              data-toggle="collapse"
+              href="#collapseLegend"
+              aria-expanded="false"
+              aria-controls="collapseLegend"
+              ><span
+                class="glyphicon glyphicon-list-alt"
+                aria-hidden="true"
+              ></span
+              ><span class="panel-label"
+                >تفصيل المعلومات عن المكان والمعالم</span
+              ></a
+            >
+            <a
+              class="panel-close"
+              role="button"
+              data-toggle="collapse"
+              tabindex="0"
+              href="#panelLegend"
+              ><span class="esri-icon esri-icon-close" aria-hidden="true"></span
+            ></a>
+          </div>
+        </div>
+        <div
+          id="collapseLegend"
+          class="panel-collapse collapse"
+          role="tabpanel"
+          aria-labelledby="headingLegend"
+        >
+          <div class="panel-body">
+            <div id="legendDiv"></div>
+          </div>
+        </div>
+      </div>
+
+      <!---------------------------------- Panel - Table ---------------------------------------------------->
+      <div id="panelTable" class="panel collapse">
+        <div id="headingTable" class="panel-heading" role="tab">
+          <div class="panel-title">
+            <a
+              class="panel-toggle"
+              role="button"
+              data-toggle="collapse"
+              href="#collapseTable"
+              aria-expanded="true"
+              aria-controls="collapseTable"
+              ><span
+                class="glyphicon glyphicon-info-sign"
+                aria-hidden="true"
+              ></span
+              ><span class="panel-label">جدول معلومات المعالم</span></a
+            >
+            <a
+              class="panel-close"
+              role="button"
+              data-toggle="collapse"
+              tabindex="0"
+              href="#panelTable"
+              ><span class="esri-icon esri-icon-close" aria-hidden="true"></span
+            ></a>
+          </div>
+        </div>
+        <div
+          id="collapseTable"
+          class="panel-collapse collapse in"
+          role="tabpanel"
+          aria-labelledby="headingTable"
+        >
+          <div class="panel-body" style="width : 500px">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"
+                  >ابحث عن معلم محدد</span
+                >
+              </div>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="اسم المعلم...."
+                aria-label="اسم المعلم....."
+                aria-describedby="basic-addon1"
+                id="placeSearch"
+                onkeyup="hanldeSearch()"
+              />
+            </div>
+            <br />
+            <table class="table table-dark" id="contentTable">
+              <thead>
+                <tr>
+                  <th scope="col">Landmark</th>
+                  <th scope="col">اسم المعلم</th>
+                  <th scope="col">المحافظة</th>
+                  <th scope="col">المنطقة</th>
+                  <th scope="col">Locality</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!---------------------------------- Panel - Chart ---------------------------------------------------->
+
+      <div id="panelChart" class="panel collapse">
+        <div id="headingTable" class="panel-heading" role="tab">
+          <div class="panel-title">
+            <a
+              class="panel-toggle"
+              role="button"
+              data-toggle="collapse"
+              href="#collapseChart"
+              aria-expanded="true"
+              aria-controls="collapseChart"
+              ><span
+                class="glyphicon glyphicon-info-sign"
+                aria-hidden="true"
+              ></span
+              ><span class="panel-label"
+                >تمثيل بياني لنسبة المعالم بين الاولية ضمن المحافظة</span
+              ></a
+            >
+            <a
+              class="panel-close"
+              role="button"
+              data-toggle="collapse"
+              tabindex="0"
+              href="#panelChart"
+              ><span class="esri-icon esri-icon-close" aria-hidden="true"></span
+            ></a>
+          </div>
+        </div>
+        <div
+          id="collapseTable"
+          class="panel-collapse collapse in"
+          role="tabpanel"
+          aria-labelledby="headingTable"
+        >
+          <div class="panel-body" style="width : 600px">
+            <canvas id="pie-chart" width="800" height="450"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!---------------------------------- Dojo bootstrap & calcite maps config ---------------------------------------------------->
+
+    <script type="text/javascript">
+      var dojoConfig = {
+        packages: [
+          {
+            name: "bootstrap",
+            location:
+              "https://esri.github.io/calcite-maps/dist/vendor/dojo-bootstrap"
+          },
+          {
+            name: "calcite-maps",
+            location: "https://esri.github.io/calcite-maps/dist/js/dojo"
+          }
+        ]
+      };
+    </script>
+
+    <!------------------------------------------ ArcGIS JS 4 API --------------------------------------------------------------->
+
+    <script src="https://js.arcgis.com/4.10/"></script>
+
+    <!----------------------------------------  jQuery 3.4 CDN ----------------------------------------------------------------->
+
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.js"
+      integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+      crossorigin="anonymous"
+    ></script>
+    <!------------------------------------------ Chart.js CDN ------------------------------------------------------------------>
+
+    <script src="https://cdnjs.com/libraries/Chart.js"></script>
+    <!------------------------------------- Local JS map file ------------------------------------------------------------------>
+    <script src="./map.js"></script>
+  </body>
+</html>
