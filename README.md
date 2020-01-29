@@ -1,4 +1,4 @@
-# InfoGraph ArcGIS JavaScript API task
+# InfoGraph ArcGIS JavaScript API 4.14 task
 > _Yaser Muhammed Jaser Saleh_
 
 
@@ -6,7 +6,7 @@
 This repository holds the solution and updates related to the task.
 
 
-**Live version:** https://yasermj.github.io/InfoGraph-Task/
+**Live version:**https://yasermj.github.io/ArcGIS-Jordan/
 
 
 **Technologies used:**
