@@ -1,4 +1,4 @@
-# InfoGraph - Esri ArcGIS - Tourist sites and parks web application
+# Esri ArcGIS - Tourist sites and parks web application
 > _Yaser Muhammed Jaser Saleh_
 
 
